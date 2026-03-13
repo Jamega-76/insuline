@@ -7,29 +7,30 @@
     <link rel="manifest" href="manifest.json">
     <style>
         :root {
+            /* Variables Thème Clair (Par défaut maintenant) */
+            --bg-color: #F2F2F7; 
+            --card-bg: #FFFFFF; 
+            --card-bg-light: #E5E5EA;
+            --text-main: #000000;
+            --text-muted: #8E8E93;
+            --accent-blue: #0A84FF; 
+            --red-delete: #FF3B30; /* Rouge iOS pour la corbeille */
+            --border-color: rgba(0, 0, 0, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.06);
+            --modal-bg: #F2F2F7;
+            --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body.dark-theme {
             /* Variables Thème Sombre */
             --bg-color: #000000;
             --card-bg: #1C1C1E; 
             --card-bg-light: #2C2C2E;
             --text-main: #FFFFFF;
             --text-muted: #8E8E93;
-            --accent-blue: #0A84FF; 
             --border-color: rgba(255, 255, 255, 0.1);
             --shadow-color: rgba(0, 0, 0, 0.4);
             --modal-bg: #151517;
-            --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        body.light-theme {
-            /* Variables Thème Clair (iOS Standard) */
-            --bg-color: #F2F2F7; 
-            --card-bg: #FFFFFF; 
-            --card-bg-light: #E5E5EA;
-            --text-main: #000000;
-            --text-muted: #8E8E93;
-            --border-color: rgba(0, 0, 0, 0.1);
-            --shadow-color: rgba(0, 0, 0, 0.06);
-            --modal-bg: #F2F2F7;
         }
 
         body {
@@ -55,14 +56,23 @@
             flex-direction: column;
         }
 
-        /* En-tête */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            margin-top: env(safe-area-inset-top, 10px);
+        /* Toast "Enregistré" (Bulle de confirmation) */
+        .toast {
+            position: fixed; top: env(safe-area-inset-top, 20px); left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: rgba(0, 0, 0, 0.8); color: #fff;
+            padding: 12px 24px; border-radius: 30px;
+            font-size: 15px; font-weight: 600;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 2000; display: flex; align-items: center; gap: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+        body.dark-theme .toast { background: rgba(255, 255, 255, 0.9); color: #000; }
+
+        /* En-tête */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; margin-top: env(safe-area-inset-top, 10px); }
         .header h1 { font-size: 22px; font-weight: 700; margin: 0; letter-spacing: 0.5px; }
         .icon { font-size: 22px; cursor: pointer; color: var(--text-muted); font-weight: 300; transition: color 0.3s; }
 
@@ -73,137 +83,74 @@
 
         /* Cartes (Saisie, Graphe, etc) */
         .card {
-            background-color: var(--card-bg);
-            border-radius: 20px;
-            padding: 22px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 20px var(--shadow-color);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            background-color: var(--card-bg); border-radius: 20px; padding: 22px; margin-bottom: 25px;
+            box-shadow: 0 4px 20px var(--shadow-color); transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
         .input-label { color: var(--text-muted); font-size: 13px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 15px; display: block; }
-        
         .input-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; transition: border-color 0.3s; }
         
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-        input[type="number"] {
-            -moz-appearance: textfield;
-            background: transparent;
-            border: none;
-            color: var(--text-main);
-            font-size: 36px;
-            font-weight: 600;
-            width: 50%;
-            outline: none;
-            padding: 0;
-            transition: color 0.3s;
-        }
+        input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type="number"] { -moz-appearance: textfield; background: transparent; border: none; color: var(--text-main); font-size: 36px; font-weight: 600; width: 50%; outline: none; padding: 0; transition: color 0.3s; }
         input[type="number"]::placeholder { color: var(--text-muted); opacity: 0.5; }
         
-        .dropdown {
-            background-color: var(--card-bg-light);
-            color: var(--text-main);
-            border: none;
-            padding: 10px 14px;
-            border-radius: 12px;
-            font-size: 15px;
-            font-weight: 500;
-            outline: none;
-            -webkit-appearance: none;
-            appearance: none;
-            text-align: center;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .btn-primary {
-            background-color: var(--accent-blue);
-            color: white;
-            border: none;
-            border-radius: 14px;
-            padding: 16px;
-            font-size: 17px;
-            font-weight: 600;
-            width: 100%;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: transform 0.1s ease, background-color 0.2s;
-        }
+        .dropdown { background-color: var(--card-bg-light); color: var(--text-main); border: none; padding: 10px 14px; border-radius: 12px; font-size: 15px; font-weight: 500; outline: none; -webkit-appearance: none; appearance: none; text-align: center; transition: background-color 0.3s, color 0.3s; }
+        .btn-primary { background-color: var(--accent-blue); color: white; border: none; border-radius: 14px; padding: 16px; font-size: 17px; font-weight: 600; width: 100%; cursor: pointer; margin-top: 10px; transition: transform 0.1s ease, background-color 0.2s; }
         .btn-primary:active { transform: scale(0.97); background-color: #0070E0; }
 
-        /* Tendance (Courbe 5 jours) */
+        /* Tendance (Courbe) */
         .section-title { font-size: 18px; font-weight: 600; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
         .section-desc { color: var(--text-muted); font-size: 13px; margin-bottom: 18px; line-height: 1.4; }
         .trend-labels { display: flex; justify-content: space-between; color: var(--text-muted); font-size: 12px; font-weight: 500; margin-top: 15px;}
         
-        /* Calendrier Apple Style */
+        /* Calendrier */
         .calendar-nav { display: flex; align-items: center; gap: 15px; font-size: 16px; font-weight: normal; }
         .calendar-nav span { cursor: pointer; color: var(--accent-blue); padding: 5px; }
         #calendar-month-label { color: var(--text-main); font-weight: 600; font-size: 16px; min-width: 110px; text-align: center; transition: color 0.3s; }
-        
         .calendar-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 12px; color: var(--text-muted); margin-bottom: 15px; font-weight: 600; }
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px 4px; }
-        
         .calendar-cell-wrap { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
         .calendar-cell-wrap:active .calendar-cell { opacity: 0.5; }
-        
-        .calendar-cell { 
-            width: 38px; height: 38px; 
-            border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; 
-            font-size: 19px; font-weight: 400; 
-            color: var(--text-main);
-            transition: background-color 0.3s, color 0.3s;
-        }
+        .calendar-cell { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 19px; font-weight: 400; color: var(--text-main); transition: background-color 0.3s, color 0.3s; }
         .calendar-cell.today { background-color: var(--accent-blue); color: #FFFFFF !important; font-weight: 600; }
-        
         .data-dot { width: 5px; height: 5px; background-color: var(--text-muted); border-radius: 50%; margin-top: 4px; transition: background-color 0.3s; }
         .calendar-cell.today + .data-dot { background-color: var(--accent-blue); }
         .no-data-spacer { width: 5px; height: 5px; margin-top: 4px; }
 
-        /* Historique Listes (utilisé dans la modale) */
-        .history-list { display: flex; flex-direction: column; gap: 12px; }
-        .history-item {
-            background-color: var(--card-bg-light);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 16px;
-            display: flex; justify-content: space-between; align-items: center;
-            transition: background-color 0.3s, border-color 0.3s;
-        }
-        .history-main { font-size: 17px; font-weight: 600; }
-        .history-sub { color: var(--text-muted); font-size: 13px; margin-top: 6px; font-weight: 500; }
-        .history-badge { background-color: var(--bg-color); padding: 8px 14px; border-radius: 10px; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 6px; transition: background-color 0.3s; }
-        .insulin-type-label { font-size: 11px; color: var(--text-muted); font-weight: 500; text-transform: uppercase; }
-
-        /* Fenêtre Modale (Bulle) */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.4); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
-            display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px;
-            opacity: 0; transition: opacity 0.3s ease;
-        }
+        /* Modale et Liste Historique */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; opacity: 0; transition: opacity 0.3s ease; }
         .modal-overlay.show { opacity: 1; display: flex; }
-        .modal-content {
-            background-color: var(--modal-bg); border: 1px solid var(--border-color); border-radius: 24px; 
-            width: 100%; max-width: 360px; padding: 24px; max-height: 80vh; overflow-y: auto;
-            transform: translateY(20px); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.3s, border-color 0.3s;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-        }
+        .modal-content { background-color: var(--modal-bg); border: 1px solid var(--border-color); border-radius: 24px; width: 100%; max-width: 360px; padding: 24px; max-height: 80vh; overflow-y: auto; transform: translateY(20px); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.3s, border-color 0.3s; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
         .modal-overlay.show .modal-content { transform: translateY(0); }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .modal-header h3 { margin: 0; font-size: 19px; font-weight: 600; }
         .close-btn { background: var(--card-bg-light); color: var(--text-muted); width: 30px; height: 30px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; cursor: pointer; transition: background-color 0.3s; }
-        .modal-empty { color: var(--text-muted); text-align: center; font-size: 15px; padding: 30px 0; }
+        
+        .history-list { display: flex; flex-direction: column; gap: 12px; }
+        .history-item { background-color: var(--card-bg-light); border: 1px solid var(--border-color); border-radius: 16px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; transition: background-color 0.3s, border-color 0.3s; }
+        .history-item-content { flex-grow: 1; display: flex; justify-content: space-between; align-items: center; }
+        .history-main { font-size: 17px; font-weight: 600; }
+        .history-sub { color: var(--text-muted); font-size: 13px; margin-top: 6px; font-weight: 500; }
+        .history-badge { background-color: var(--bg-color); padding: 8px 12px; border-radius: 10px; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; transition: background-color 0.3s; }
+        .insulin-type-label { font-size: 11px; color: var(--text-muted); font-weight: 500; text-transform: uppercase; }
+        
+        /* Bouton Supprimer */
+        .delete-btn { background: rgba(255, 59, 48, 0.1); color: var(--red-delete); border: none; width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; margin-left: 12px; transition: background 0.2s; padding: 0; }
+        .delete-btn:active { background: rgba(255, 59, 48, 0.2); }
 
     </style>
 </head>
 <body>
 
+<div id="toast" class="toast">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    Enregistré
+</div>
+
 <div class="app-container">
     <div class="header">
         <span class="icon"></span> 
         <h1>Suivi Diabète</h1>
-        <span class="icon" id="theme-btn" onclick="toggleTheme()" style="font-size: 24px;">☀</span>
+        <span class="icon" id="theme-btn" onclick="toggleTheme()" style="font-size: 24px;">☾</span>
     </div>
 
     <div class="status-header">
@@ -234,9 +181,7 @@
     <div class="card" style="padding-bottom: 18px;">
         <div class="section-title">Tendance Glycémie</div>
         <div class="section-desc" style="margin-bottom: 25px;">Moyenne sur les 5 derniers jours</div>
-        
         <div id="trend-chart" style="height: 100px; width: 100%;"></div>
-        
         <div class="trend-labels">
             <span>J-4</span><span>J-3</span><span>J-2</span><span>J-1</span>
             <span style="color: var(--text-main); font-weight: 600;">Auj.</span>
@@ -252,8 +197,7 @@
                 <span onclick="changeMonth(1)">›</span>
             </div>
         </div>
-        <div id="calendar-container">
-            </div>
+        <div id="calendar-container"></div>
     </div>
 </div>
 
@@ -263,8 +207,7 @@
             <h3 id="modal-date-title">Date</h3>
             <div class="close-btn" onclick="closeModal()">×</div>
         </div>
-        <div id="modal-entries" class="history-list">
-            </div>
+        <div id="modal-entries" class="history-list"></div>
     </div>
 </div>
 
@@ -275,22 +218,21 @@
     // --- GESTION DU THÈME ---
     function initTheme() {
         const savedTheme = localStorage.getItem('diabeteTheme');
-        if (savedTheme === 'light') {
-            document.body.classList.add('light-theme');
-            document.getElementById('theme-btn').innerText = '☾';
-        } else {
+        // Le clair est par défaut maintenant, on active le dark-theme seulement si sauvegardé
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-theme');
             document.getElementById('theme-btn').innerText = '☀';
+        } else {
+            document.getElementById('theme-btn').innerText = '☾';
         }
     }
 
     function toggleTheme() {
         const body = document.body;
-        body.classList.toggle('light-theme');
-        const isLight = body.classList.contains('light-theme');
-        document.getElementById('theme-btn').innerText = isLight ? '☾' : '☀';
-        localStorage.setItem('diabeteTheme', isLight ? 'light' : 'dark');
-        
-        // Redessiner le graphique pour que les textes de la courbe s'adaptent au thème
+        body.classList.toggle('dark-theme');
+        const isDark = body.classList.contains('dark-theme');
+        document.getElementById('theme-btn').innerText = isDark ? '☀' : '☾';
+        localStorage.setItem('diabeteTheme', isDark ? 'dark' : 'light');
         updateTrendChart();
     }
 
@@ -301,6 +243,12 @@
         if (hour >= 5 && hour < 12) periodSelect.value = "Matin";
         else if (hour >= 12 && hour < 18) periodSelect.value = "Midi";
         else periodSelect.value = "Soir";
+    }
+
+    function showToast() {
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
     }
 
     function saveEntry() {
@@ -328,6 +276,20 @@
         
         setAutoPeriod();
         updateUI();
+
+        // Retour haptique et notification
+        if (navigator.vibrate) navigator.vibrate(40);
+        showToast();
+    }
+
+    function deleteEntry(id, year, month, day) {
+        if(confirm("Voulez-vous vraiment supprimer ce relevé ?")) {
+            entries = entries.filter(e => e.id !== id);
+            localStorage.setItem('diabeteEntries', JSON.stringify(entries));
+            updateUI();
+            openDayModal(year, month, day); // Rafraîchir la bulle
+            if (navigator.vibrate) navigator.vibrate(40);
+        }
     }
 
     function updateUI() {
@@ -337,23 +299,20 @@
             if (new Date(entry.date).toDateString() === todayStr) todayCount++;
         });
         document.getElementById('today-count').innerText = `${todayCount} relevé${todayCount > 1 ? 's' : ''}`;
-
         updateTrendChart();
         renderCalendar(); 
     }
 
-    // --- COURBE DE TENDANCE (5 JOURS) ---
+    // --- COURBE DE TENDANCE ---
     function updateTrendChart() {
         const days = 5;
         let averages = [];
         const today = new Date();
         today.setHours(0,0,0,0);
 
-        // Calculer la moyenne pour chaque jour de J-4 à Aujourd'hui
         for(let i = days - 1; i >= 0; i--) {
             let targetDate = new Date(today.getTime() - i * 86400000);
             let dayEntries = entries.filter(e => new Date(e.date).toDateString() === targetDate.toDateString());
-
             let avg = 0;
             if(dayEntries.length > 0) {
                 let sum = dayEntries.reduce((acc, curr) => acc + curr.sugar, 0);
@@ -366,64 +325,51 @@
         let validAvgs = averages.filter(a => a > 0);
         
         if(validAvgs.length === 0) {
-            container.innerHTML = '<div style="height:100%; display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:14px;">Aucune donnée récente pour tracer la courbe</div>';
+            container.innerHTML = '<div style="height:100%; display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:14px;">Aucune donnée</div>';
             return;
         }
 
-        // Déterminer les échelles de la courbe
         let min = Math.min(...validAvgs) * 0.8; 
         let max = Math.max(...validAvgs) * 1.15; 
         if (min === max) { min -= 20; max += 20; }
 
         const svgW = 300;
         const svgH = 80;
-        const stepX = svgW / 4; // 5 points = 4 intervalles
+        const stepX = svgW / 4; 
 
         let pathD = "";
         let elementsSVG = "";
-        
-        // Couleur du texte en fonction du thème
-        const textColor = document.body.classList.contains('light-theme') ? '#000000' : '#FFFFFF';
+        const textColor = document.body.classList.contains('dark-theme') ? '#FFFFFF' : '#000000';
 
         for(let i=0; i<5; i++) {
             if(averages[i] > 0) {
                 let x = i * stepX;
                 let y = svgH - ((averages[i] - min) / (max - min)) * svgH;
-                
-                // Tracer la ligne
                 if(pathD === "") pathD = `M ${x},${y} `;
                 else pathD += `L ${x},${y} `;
-                
-                // Ajouter le point rond
                 elementsSVG += `<circle cx="${x}" cy="${y}" r="5" fill="var(--card-bg)" stroke="var(--accent-blue)" stroke-width="2.5"/>`;
-                
-                // Ajouter la valeur texte au dessus du point
-                let displayValue = Math.round(averages[i] * 10) / 10; // Arrondi à 1 décimale
+                let displayValue = Math.round(averages[i] * 10) / 10;
                 elementsSVG += `<text x="${x}" y="${y - 14}" fill="${textColor}" font-size="12" font-family="sans-serif" font-weight="700" text-anchor="middle">${displayValue}</text>`;
             }
         }
 
-        // Assembler le graphique SVG complet
         let svg = `
         <svg viewBox="-15 -25 ${svgW + 30} ${svgH + 40}" width="100%" height="100%" style="overflow: visible;">
             <path d="${pathD}" fill="none" stroke="var(--accent-blue)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
             ${elementsSVG}
         </svg>`;
-        
         container.innerHTML = svg;
     }
 
-    // --- CALENDRIER APPLE ---
+    // --- CALENDRIER ---
     function renderCalendar() {
         const year = calendarDate.getFullYear();
         const month = calendarDate.getMonth();
-        
         const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
         document.getElementById('calendar-month-label').innerText = `${monthNames[month]} ${year}`;
         
         let firstDayIndex = new Date(year, month, 1).getDay();
         let startOffset = firstDayIndex === 0 ? 6 : firstDayIndex - 1;
-        
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         const todayStr = new Date().toDateString();
         
@@ -436,7 +382,6 @@
             const cellDate = new Date(year, month, day);
             const isToday = cellDate.toDateString() === todayStr;
             const hasData = entries.some(e => new Date(e.date).toDateString() === cellDate.toDateString());
-            
             let todayClass = isToday ? 'today' : '';
             let dotHtml = hasData ? '<div class="data-dot"></div>' : '<div class="no-data-spacer"></div>';
             
@@ -456,11 +401,10 @@
         renderCalendar();
     }
 
-    // --- BULLE MODALE ---
+    // --- BULLE MODALE & CORBEILLE ---
     function openDayModal(year, month, day) {
         const selectedDate = new Date(year, month, day);
         const dateStr = selectedDate.toDateString();
-        
         const options = { weekday: 'long', day: 'numeric', month: 'long' };
         let titleStr = selectedDate.toLocaleDateString('fr-FR', options);
         document.getElementById('modal-date-title').innerText = titleStr.charAt(0).toUpperCase() + titleStr.slice(1);
@@ -470,7 +414,7 @@
         container.innerHTML = '';
         
         if (dayEntries.length === 0) {
-            container.innerHTML = '<div class="modal-empty">Aucun relevé ce jour.</div>';
+            container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:20px;">Aucun relevé ce jour.</div>';
         } else {
             dayEntries.forEach(entry => {
                 const timeStr = new Date(entry.date).toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'});
@@ -479,15 +423,21 @@
                     insulinDisplay = `${entry.insulin} U <span class="insulin-type-label">${entry.insulinType}</span>`;
                 }
                 
+                // SVG de la corbeille
+                const trashIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
+
                 container.innerHTML += `
                     <div class="history-item">
-                        <div>
-                            <div class="history-main">${entry.sugar} mg/dL</div>
-                            <div class="history-sub">${timeStr} (${entry.period})</div>
+                        <div class="history-item-content">
+                            <div>
+                                <div class="history-main">${entry.sugar} mg/dL</div>
+                                <div class="history-sub">${timeStr} (${entry.period})</div>
+                            </div>
+                            <div class="history-badge">${insulinDisplay}</div>
                         </div>
-                        <div class="history-badge">
-                            ${insulinDisplay}
-                        </div>
+                        <button class="delete-btn" onclick="deleteEntry(${entry.id}, ${year}, ${month}, ${day})">
+                            ${trashIcon}
+                        </button>
                     </div>
                 `;
             });
@@ -502,9 +452,7 @@
     }
 
     // --- INITIALISATION ---
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js').catch(err => console.log(err));
-    }
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(err => console.log(err));
     initTheme(); 
     setAutoPeriod(); 
     updateUI();
