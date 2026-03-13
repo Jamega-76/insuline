@@ -10,14 +10,14 @@
             /* Variables Thème Clair (Par défaut) */
             --bg-color: #F2F2F7; 
             --card-bg: #FFFFFF; 
-            --card-bg-light: #E5E5EA; /* Gris pour le jour actuel */
+            --card-bg-light: #E5E5EA;
             --text-main: #000000;
             --text-muted: #8E8E93;
             --accent-blue: #0A84FF; 
             --red-delete: #FF3B30; 
             --border-color: rgba(0, 0, 0, 0.1);
             --shadow-color: rgba(0, 0, 0, 0.06);
-            --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.04); /* Ombre douce des cartes calendrier */
+            --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.04); 
             --modal-bg: #F2F2F7;
             --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
@@ -36,58 +36,37 @@
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: var(--font-family);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            -webkit-font-smoothing: antialiased;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            background-color: var(--bg-color); color: var(--text-main); font-family: var(--font-family);
+            margin: 0; padding: 0; display: flex; justify-content: center;
+            -webkit-font-smoothing: antialiased; transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .app-container {
-            width: 100%;
-            max-width: 430px; 
-            padding: 20px;
-            padding-bottom: env(safe-area-inset-bottom, 40px);
-            box-sizing: border-box;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            width: 100%; max-width: 430px; padding: 20px; padding-bottom: env(safe-area-inset-bottom, 40px);
+            box-sizing: border-box; min-height: 100vh; display: flex; flex-direction: column;
         }
 
         /* Toast "Enregistré" */
         .toast {
-            position: fixed; top: env(safe-area-inset-top, 20px); left: 50%;
-            transform: translateX(-50%) translateY(-100px);
-            background: rgba(0, 0, 0, 0.8); color: #fff;
-            padding: 12px 24px; border-radius: 30px;
-            font-size: 15px; font-weight: 600;
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 2000; display: flex; align-items: center; gap: 8px;
+            position: fixed; top: env(safe-area-inset-top, 20px); left: 50%; transform: translateX(-50%) translateY(-100px);
+            background: rgba(0, 0, 0, 0.8); color: #fff; padding: 12px 24px; border-radius: 30px;
+            font-size: 15px; font-weight: 600; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 2000; display: flex; align-items: center; gap: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
         .toast.show { transform: translateX(-50%) translateY(0); }
         body.dark-theme .toast { background: rgba(255, 255, 255, 0.9); color: #000; }
 
-        /* En-tête */
+        /* Interface Globale */
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; margin-top: env(safe-area-inset-top, 10px); }
         .header h1 { font-size: 22px; font-weight: 700; margin: 0; letter-spacing: 0.5px; }
         .icon { font-size: 22px; cursor: pointer; color: var(--text-muted); font-weight: 300; transition: color 0.3s; }
 
-        /* Balance / Statut */
         .status-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
         .status-title { color: var(--text-muted); font-size: 15px; font-weight: 500; }
         .status-value { font-size: 15px; font-weight: 600; color: var(--text-main); transition: color 0.3s; }
 
-        /* Cartes (Saisie, Tendance) */
-        .card {
-            background-color: var(--card-bg); border-radius: 20px; padding: 22px; margin-bottom: 25px;
-            box-shadow: 0 4px 20px var(--shadow-color); transition: background-color 0.3s ease, box-shadow 0.3s ease;
-        }
+        .card { background-color: var(--card-bg); border-radius: 20px; padding: 22px; margin-bottom: 25px; box-shadow: 0 4px 20px var(--shadow-color); transition: background-color 0.3s ease, box-shadow 0.3s ease; }
         .input-label { color: var(--text-muted); font-size: 13px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 15px; display: block; }
         .input-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; transition: border-color 0.3s; }
         
@@ -104,40 +83,23 @@
         .section-desc { color: var(--text-muted); font-size: 13px; margin-bottom: 18px; line-height: 1.4; }
         .trend-labels { display: flex; justify-content: space-between; color: var(--text-muted); font-size: 12px; font-weight: 500; margin-top: 15px;}
         
-        /* Nouveau Calendrier "Bento" style */
+        /* Calendrier Bento */
         .calendar-nav { display: flex; align-items: center; gap: 15px; font-size: 16px; font-weight: normal; }
         .calendar-nav span { cursor: pointer; color: var(--accent-blue); padding: 5px; }
         #calendar-month-label { color: var(--text-main); font-weight: 600; font-size: 16px; min-width: 110px; text-align: center; transition: color 0.3s; }
-        
         #calendar-container { margin-top: 15px; }
         .calendar-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-bottom: 8px; }
-        .calendar-weekday { 
-            background-color: var(--card-bg); border-radius: 10px; padding: 10px 0; 
-            text-align: center; font-size: 11px; font-weight: 600; color: var(--text-muted);
-            box-shadow: var(--shadow-subtle); transition: background-color 0.3s, color 0.3s;
-        }
+        .calendar-weekday { background-color: var(--card-bg); border-radius: 10px; padding: 10px 0; text-align: center; font-size: 11px; font-weight: 600; color: var(--text-muted); box-shadow: var(--shadow-subtle); transition: background-color 0.3s, color 0.3s; }
         .calendar-weekday.today-header { background-color: var(--card-bg-light); color: var(--text-main); }
-        
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
-        
-        .calendar-cell { 
-            background-color: var(--card-bg); border-radius: 12px; aspect-ratio: 1; 
-            display: flex; align-items: center; justify-content: center; 
-            font-size: 16px; font-weight: 500; color: var(--text-main);
-            box-shadow: var(--shadow-subtle); cursor: pointer; position: relative;
-            transition: background-color 0.3s, color 0.3s, transform 0.1s;
-        }
+        .calendar-cell { background-color: var(--card-bg); border-radius: 12px; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 500; color: var(--text-main); box-shadow: var(--shadow-subtle); cursor: pointer; position: relative; transition: background-color 0.3s, color 0.3s, transform 0.1s; }
         .calendar-cell:active { transform: scale(0.92); }
         .calendar-cell.empty { background-color: transparent; box-shadow: none; cursor: default; }
         .calendar-cell.empty:active { transform: none; }
-        
-        /* Style "Aujourd'hui" (Fond grisé clair comme sur l'image) */
         .calendar-cell.today { background-color: var(--card-bg-light); font-weight: 700; }
-        
-        /* Petit point de donnée en haut à droite */
         .data-dot { position: absolute; top: 6px; right: 6px; width: 6px; height: 6px; background-color: var(--accent-blue); border-radius: 50%; }
 
-        /* Modale et Liste Historique */
+        /* Modale */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; opacity: 0; transition: opacity 0.3s ease; }
         .modal-overlay.show { opacity: 1; display: flex; }
         .modal-content { background-color: var(--modal-bg); border: 1px solid var(--border-color); border-radius: 24px; width: 100%; max-width: 360px; padding: 24px; max-height: 80vh; overflow-y: auto; transform: translateY(20px); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.3s, border-color 0.3s; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
@@ -156,7 +118,6 @@
         
         .delete-btn { background: rgba(255, 59, 48, 0.1); color: var(--red-delete); border: none; width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; margin-left: 12px; transition: background 0.2s; padding: 0; }
         .delete-btn:active { background: rgba(255, 59, 48, 0.2); }
-
     </style>
 </head>
 <body>
@@ -175,7 +136,7 @@
 
     <div class="status-header">
         <span class="status-title">Aujourd'hui</span>
-        <span class="status-value" id="today-count">0 relevés</span>
+        <span class="status-value" id="today-count">Synchronisation...</span>
     </div>
 
     <div class="card">
@@ -231,11 +192,72 @@
     </div>
 </div>
 
-<script>
-    let entries = JSON.parse(localStorage.getItem('diabeteEntries')) || [];
-    let calendarDate = new Date();
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-    function initTheme() {
+    const firebaseConfig = {
+      apiKey: "AIzaSyA3ZfHrodj7zIbp8DqnlsIR80PVsD2_kJc",
+      authDomain: "app-insuline.firebaseapp.com",
+      projectId: "app-insuline",
+      storageBucket: "app-insuline.firebasestorage.app",
+      messagingSenderId: "565335881993",
+      appId: "1:565335881993:web:480f3b795a332fdb3a7bd8"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.entries = [];
+    window.calendarDate = new Date();
+
+    const q = query(collection(db, "releves"), orderBy("date", "desc"));
+    onSnapshot(q, (snapshot) => {
+        window.entries = [];
+        snapshot.forEach((firebaseDoc) => {
+            window.entries.push({ id: firebaseDoc.id, ...firebaseDoc.data() });
+        });
+        updateUI();
+    });
+
+    window.saveEntry = async function() {
+        const sugar = document.getElementById('sugar-input').value;
+        const insulin = document.getElementById('insulin-input').value;
+        const period = document.getElementById('period-input').value;
+        const insulinType = document.getElementById('insulin-type-input').value;
+
+        if (!sugar) return alert("Veuillez saisir au moins le taux de sucre.");
+
+        const newEntry = {
+            date: new Date().toISOString(),
+            sugar: parseFloat(sugar),
+            insulin: insulin ? parseFloat(insulin) : 0,
+            insulinType: insulin ? insulinType : null,
+            period: period
+        };
+
+        await addDoc(collection(db, "releves"), newEntry);
+        
+        document.getElementById('sugar-input').value = '';
+        document.getElementById('insulin-input').value = '';
+        document.getElementById('insulin-type-input').value = 'Lente';
+        window.setAutoPeriod();
+
+        if (navigator.vibrate) navigator.vibrate(40);
+        window.showToast();
+    };
+
+    window.deleteEntry = async function(id) {
+        if(confirm("Voulez-vous vraiment supprimer ce relevé ?")) {
+            await deleteDoc(doc(db, "releves", id));
+            window.closeModal(); 
+            if (navigator.vibrate) navigator.vibrate(40);
+        }
+    };
+</script>
+
+<script>
+    window.initTheme = function() {
         const savedTheme = localStorage.getItem('diabeteTheme');
         if (savedTheme === 'dark') {
             document.body.classList.add('dark-theme');
@@ -245,16 +267,16 @@
         }
     }
 
-    function toggleTheme() {
+    window.toggleTheme = function() {
         const body = document.body;
         body.classList.toggle('dark-theme');
         const isDark = body.classList.contains('dark-theme');
         document.getElementById('theme-btn').innerText = isDark ? '☀' : '☾';
         localStorage.setItem('diabeteTheme', isDark ? 'dark' : 'light');
-        updateTrendChart();
+        if(window.updateTrendChart) window.updateTrendChart();
     }
 
-    function setAutoPeriod() {
+    window.setAutoPeriod = function() {
         const hour = new Date().getHours();
         const periodSelect = document.getElementById('period-input');
         if (hour >= 5 && hour < 12) periodSelect.value = "Matin";
@@ -262,73 +284,31 @@
         else periodSelect.value = "Soir";
     }
 
-    function showToast() {
+    window.showToast = function() {
         const toast = document.getElementById('toast');
         toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 2000);
     }
 
-    function saveEntry() {
-        const sugar = document.getElementById('sugar-input').value;
-        const insulin = document.getElementById('insulin-input').value;
-        const period = document.getElementById('period-input').value;
-        const insulinType = document.getElementById('insulin-type-input').value;
-
-        if (!sugar) return alert("Veuillez saisir au moins le taux de sucre.");
-
-        const entry = {
-            id: Date.now(),
-            date: new Date().toISOString(),
-            sugar: parseFloat(sugar),
-            insulin: insulin ? parseFloat(insulin) : 0,
-            insulinType: insulin ? insulinType : null,
-            period: period
-        };
-
-        entries.unshift(entry);
-        localStorage.setItem('diabeteEntries', JSON.stringify(entries));
-        
-        document.getElementById('sugar-input').value = '';
-        document.getElementById('insulin-input').value = '';
-        document.getElementById('insulin-type-input').value = 'Lente';
-        
-        setAutoPeriod();
-        updateUI();
-
-        if (navigator.vibrate) navigator.vibrate(40);
-        showToast();
-    }
-
-    function deleteEntry(id, year, month, day) {
-        if(confirm("Voulez-vous vraiment supprimer ce relevé ?")) {
-            entries = entries.filter(e => e.id !== id);
-            localStorage.setItem('diabeteEntries', JSON.stringify(entries));
-            updateUI();
-            openDayModal(year, month, day); 
-            if (navigator.vibrate) navigator.vibrate(40);
-        }
-    }
-
-    function updateUI() {
+    window.updateUI = function() {
         let todayCount = 0;
         const todayStr = new Date().toDateString();
-        entries.forEach(entry => {
+        window.entries.forEach(entry => {
             if (new Date(entry.date).toDateString() === todayStr) todayCount++;
         });
         document.getElementById('today-count').innerText = `${todayCount} relevé${todayCount > 1 ? 's' : ''}`;
-        updateTrendChart();
-        renderCalendar(); 
+        window.updateTrendChart();
+        window.renderCalendar(); 
     }
 
-    function updateTrendChart() {
-        const days = 5;
-        let averages = [];
-        const today = new Date();
-        today.setHours(0,0,0,0);
+    window.updateTrendChart = function() {
+        if(!window.entries) return;
+        const days = 5; let averages = [];
+        const today = new Date(); today.setHours(0,0,0,0);
 
         for(let i = days - 1; i >= 0; i--) {
             let targetDate = new Date(today.getTime() - i * 86400000);
-            let dayEntries = entries.filter(e => new Date(e.date).toDateString() === targetDate.toDateString());
+            let dayEntries = window.entries.filter(e => new Date(e.date).toDateString() === targetDate.toDateString());
             let avg = 0;
             if(dayEntries.length > 0) {
                 let sum = dayEntries.reduce((acc, curr) => acc + curr.sugar, 0);
@@ -339,109 +319,77 @@
 
         const container = document.getElementById('trend-chart');
         let validAvgs = averages.filter(a => a > 0);
-        
         if(validAvgs.length === 0) {
             container.innerHTML = '<div style="height:100%; display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:14px;">Aucune donnée</div>';
             return;
         }
 
-        let min = Math.min(...validAvgs) * 0.8; 
-        let max = Math.max(...validAvgs) * 1.15; 
+        let min = Math.min(...validAvgs) * 0.8; let max = Math.max(...validAvgs) * 1.15; 
         if (min === max) { min -= 20; max += 20; }
-
-        const svgW = 300;
-        const svgH = 80;
-        const stepX = svgW / 4; 
-
-        let pathD = "";
-        let elementsSVG = "";
+        const svgW = 300; const svgH = 80; const stepX = svgW / 4; 
+        let pathD = ""; let elementsSVG = "";
         const textColor = document.body.classList.contains('dark-theme') ? '#FFFFFF' : '#000000';
 
         for(let i=0; i<5; i++) {
             if(averages[i] > 0) {
-                let x = i * stepX;
-                let y = svgH - ((averages[i] - min) / (max - min)) * svgH;
-                if(pathD === "") pathD = `M ${x},${y} `;
-                else pathD += `L ${x},${y} `;
+                let x = i * stepX; let y = svgH - ((averages[i] - min) / (max - min)) * svgH;
+                if(pathD === "") pathD = `M ${x},${y} `; else pathD += `L ${x},${y} `;
                 elementsSVG += `<circle cx="${x}" cy="${y}" r="5" fill="var(--card-bg)" stroke="var(--accent-blue)" stroke-width="2.5"/>`;
                 let displayValue = Math.round(averages[i] * 10) / 10;
                 elementsSVG += `<text x="${x}" y="${y - 14}" fill="${textColor}" font-size="12" font-family="sans-serif" font-weight="700" text-anchor="middle">${displayValue}</text>`;
             }
         }
-
-        let svg = `
-        <svg viewBox="-15 -25 ${svgW + 30} ${svgH + 40}" width="100%" height="100%" style="overflow: visible;">
-            <path d="${pathD}" fill="none" stroke="var(--accent-blue)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-            ${elementsSVG}
-        </svg>`;
-        container.innerHTML = svg;
+        container.innerHTML = `<svg viewBox="-15 -25 ${svgW + 30} ${svgH + 40}" width="100%" height="100%" style="overflow: visible;"><path d="${pathD}" fill="none" stroke="var(--accent-blue)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>${elementsSVG}</svg>`;
     }
 
-    function renderCalendar() {
-        const year = calendarDate.getFullYear();
-        const month = calendarDate.getMonth();
+    window.renderCalendar = function() {
+        if(!window.entries) return;
+        const year = window.calendarDate.getFullYear(); const month = window.calendarDate.getMonth();
         const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
         document.getElementById('calendar-month-label').innerText = `${monthNames[month]} ${year}`;
         
-        let firstDayIndex = new Date(year, month, 1).getDay();
-        let startOffset = firstDayIndex === 0 ? 6 : firstDayIndex - 1;
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        const todayStr = new Date().toDateString();
+        let firstDayIndex = new Date(year, month, 1).getDay(); let startOffset = firstDayIndex === 0 ? 6 : firstDayIndex - 1;
+        const daysInMonth = new Date(year, month + 1, 0).getDate(); const todayStr = new Date().toDateString();
         
-        // Génération dynamique des en-têtes pour griser l'en-tête du jour actuel
         const weekdaysList = ["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"];
         let html = '<div class="calendar-weekdays">';
         weekdaysList.forEach((dayLabel, index) => {
             let isTodayWeekday = false;
-            // Si on affiche le mois et l'année en cours, on surligne le nom du jour actuel
             if (year === new Date().getFullYear() && month === new Date().getMonth()) {
-                const currentDayIndex = new Date().getDay();
-                const adjustedIndex = currentDayIndex === 0 ? 6 : currentDayIndex - 1;
+                const currentDayIndex = new Date().getDay(); const adjustedIndex = currentDayIndex === 0 ? 6 : currentDayIndex - 1;
                 if (index === adjustedIndex) isTodayWeekday = true;
             }
             html += `<div class="calendar-weekday ${isTodayWeekday ? 'today-header' : ''}">${dayLabel}</div>`;
         });
         html += '</div><div class="calendar-grid">';
         
-        // Cases vides avant le 1er du mois
         for(let i=0; i<startOffset; i++) { html += `<div class="calendar-cell empty"></div>`; }
         
-        // Les jours du mois
         for(let day=1; day<=daysInMonth; day++) {
             const cellDate = new Date(year, month, day);
             const isToday = cellDate.toDateString() === todayStr;
-            const hasData = entries.some(e => new Date(e.date).toDateString() === cellDate.toDateString());
+            const hasData = window.entries.some(e => new Date(e.date).toDateString() === cellDate.toDateString());
+            let todayClass = isToday ? 'today' : ''; let dotHtml = hasData ? '<div class="data-dot"></div>' : '';
             
-            let todayClass = isToday ? 'today' : '';
-            let dotHtml = hasData ? '<div class="data-dot"></div>' : '';
-            
-            // La case est maintenant l'élément complet avec l'ombre (façon Bento)
-            html += `
-                <div class="calendar-cell ${todayClass}" onclick="openDayModal(${year}, ${month}, ${day})">
-                    ${day}
-                    ${dotHtml}
-                </div>
-            `;
+            html += `<div class="calendar-cell ${todayClass}" onclick="openDayModal(${year}, ${month}, ${day})">${day}${dotHtml}</div>`;
         }
         html += '</div>';
         document.getElementById('calendar-container').innerHTML = html;
     }
 
-    function changeMonth(delta) {
-        calendarDate.setMonth(calendarDate.getMonth() + delta);
-        renderCalendar();
+    window.changeMonth = function(delta) {
+        window.calendarDate.setMonth(window.calendarDate.getMonth() + delta);
+        window.renderCalendar();
     }
 
-    function openDayModal(year, month, day) {
-        const selectedDate = new Date(year, month, day);
-        const dateStr = selectedDate.toDateString();
+    window.openDayModal = function(year, month, day) {
+        const selectedDate = new Date(year, month, day); const dateStr = selectedDate.toDateString();
         const options = { weekday: 'long', day: 'numeric', month: 'long' };
         let titleStr = selectedDate.toLocaleDateString('fr-FR', options);
         document.getElementById('modal-date-title').innerText = titleStr.charAt(0).toUpperCase() + titleStr.slice(1);
         
-        const dayEntries = entries.filter(e => new Date(e.date).toDateString() === dateStr);
-        const container = document.getElementById('modal-entries');
-        container.innerHTML = '';
+        const dayEntries = window.entries.filter(e => new Date(e.date).toDateString() === dateStr);
+        const container = document.getElementById('modal-entries'); container.innerHTML = '';
         
         if (dayEntries.length === 0) {
             container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:20px;">Aucun relevé ce jour.</div>';
@@ -449,41 +397,29 @@
             dayEntries.forEach(entry => {
                 const timeStr = new Date(entry.date).toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'});
                 let insulinDisplay = '-';
-                if (entry.insulin > 0) {
-                    insulinDisplay = `${entry.insulin} U <span class="insulin-type-label">${entry.insulinType}</span>`;
-                }
-                
+                if (entry.insulin > 0) insulinDisplay = `${entry.insulin} U <span class="insulin-type-label">${entry.insulinType}</span>`;
                 const trashIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
 
                 container.innerHTML += `
                     <div class="history-item">
                         <div class="history-item-content">
-                            <div>
-                                <div class="history-main">${entry.sugar} mg/dL</div>
-                                <div class="history-sub">${timeStr} (${entry.period})</div>
-                            </div>
+                            <div><div class="history-main">${entry.sugar} mg/dL</div><div class="history-sub">${timeStr} (${entry.period})</div></div>
                             <div class="history-badge">${insulinDisplay}</div>
                         </div>
-                        <button class="delete-btn" onclick="deleteEntry(${entry.id}, ${year}, ${month}, ${day})">
-                            ${trashIcon}
-                        </button>
-                    </div>
-                `;
+                        <button class="delete-btn" onclick="deleteEntry('${entry.id}')">${trashIcon}</button>
+                    </div>`;
             });
         }
-        
         document.getElementById('day-modal').classList.add('show');
     }
 
-    function closeModal(event) {
+    window.closeModal = function(event) {
         if (event && event.target !== document.getElementById('day-modal')) return;
         document.getElementById('day-modal').classList.remove('show');
     }
 
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(err => console.log(err));
-    initTheme(); 
-    setAutoPeriod(); 
-    updateUI();
+    window.initTheme(); window.setAutoPeriod();
 </script>
 </body>
 </html>
