@@ -10,13 +10,14 @@
             /* Variables Thème Clair (Par défaut) */
             --bg-color: #F2F2F7; 
             --card-bg: #FFFFFF; 
-            --card-bg-light: #E5E5EA;
+            --card-bg-light: #E5E5EA; /* Gris pour le jour actuel */
             --text-main: #000000;
             --text-muted: #8E8E93;
             --accent-blue: #0A84FF; 
             --red-delete: #FF3B30; 
             --border-color: rgba(0, 0, 0, 0.1);
             --shadow-color: rgba(0, 0, 0, 0.06);
+            --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.04); /* Ombre douce des cartes calendrier */
             --modal-bg: #F2F2F7;
             --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
@@ -30,6 +31,7 @@
             --text-muted: #8E8E93;
             --border-color: rgba(255, 255, 255, 0.1);
             --shadow-color: rgba(0, 0, 0, 0.4);
+            --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.2);
             --modal-bg: #151517;
         }
 
@@ -81,7 +83,7 @@
         .status-title { color: var(--text-muted); font-size: 15px; font-weight: 500; }
         .status-value { font-size: 15px; font-weight: 600; color: var(--text-main); transition: color 0.3s; }
 
-        /* Cartes */
+        /* Cartes (Saisie, Tendance) */
         .card {
             background-color: var(--card-bg); border-radius: 20px; padding: 22px; margin-bottom: 25px;
             box-shadow: 0 4px 20px var(--shadow-color); transition: background-color 0.3s ease, box-shadow 0.3s ease;
@@ -102,19 +104,38 @@
         .section-desc { color: var(--text-muted); font-size: 13px; margin-bottom: 18px; line-height: 1.4; }
         .trend-labels { display: flex; justify-content: space-between; color: var(--text-muted); font-size: 12px; font-weight: 500; margin-top: 15px;}
         
-        /* Calendrier */
+        /* Nouveau Calendrier "Bento" style */
         .calendar-nav { display: flex; align-items: center; gap: 15px; font-size: 16px; font-weight: normal; }
         .calendar-nav span { cursor: pointer; color: var(--accent-blue); padding: 5px; }
         #calendar-month-label { color: var(--text-main); font-weight: 600; font-size: 16px; min-width: 110px; text-align: center; transition: color 0.3s; }
-        .calendar-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 12px; color: var(--text-muted); margin-bottom: 15px; font-weight: 600; }
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px 4px; }
-        .calendar-cell-wrap { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
-        .calendar-cell-wrap:active .calendar-cell { opacity: 0.5; }
-        .calendar-cell { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 19px; font-weight: 400; color: var(--text-main); transition: background-color 0.3s, color 0.3s; }
-        .calendar-cell.today { background-color: var(--accent-blue); color: #FFFFFF !important; font-weight: 600; }
-        .data-dot { width: 5px; height: 5px; background-color: var(--text-muted); border-radius: 50%; margin-top: 4px; transition: background-color 0.3s; }
-        .calendar-cell.today + .data-dot { background-color: var(--accent-blue); }
-        .no-data-spacer { width: 5px; height: 5px; margin-top: 4px; }
+        
+        #calendar-container { margin-top: 15px; }
+        .calendar-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-bottom: 8px; }
+        .calendar-weekday { 
+            background-color: var(--card-bg); border-radius: 10px; padding: 10px 0; 
+            text-align: center; font-size: 11px; font-weight: 600; color: var(--text-muted);
+            box-shadow: var(--shadow-subtle); transition: background-color 0.3s, color 0.3s;
+        }
+        .calendar-weekday.today-header { background-color: var(--card-bg-light); color: var(--text-main); }
+        
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+        
+        .calendar-cell { 
+            background-color: var(--card-bg); border-radius: 12px; aspect-ratio: 1; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 16px; font-weight: 500; color: var(--text-main);
+            box-shadow: var(--shadow-subtle); cursor: pointer; position: relative;
+            transition: background-color 0.3s, color 0.3s, transform 0.1s;
+        }
+        .calendar-cell:active { transform: scale(0.92); }
+        .calendar-cell.empty { background-color: transparent; box-shadow: none; cursor: default; }
+        .calendar-cell.empty:active { transform: none; }
+        
+        /* Style "Aujourd'hui" (Fond grisé clair comme sur l'image) */
+        .calendar-cell.today { background-color: var(--card-bg-light); font-weight: 700; }
+        
+        /* Petit point de donnée en haut à droite */
+        .data-dot { position: absolute; top: 6px; right: 6px; width: 6px; height: 6px; background-color: var(--accent-blue); border-radius: 50%; }
 
         /* Modale et Liste Historique */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; opacity: 0; transition: opacity 0.3s ease; }
@@ -187,8 +208,8 @@
         </div>
     </div>
 
-    <div class="card">
-        <div class="section-title" style="margin-bottom: 20px;">
+    <div style="margin-bottom: 25px;">
+        <div class="section-title" style="margin-bottom: 15px;">
             <span>Historique</span>
             <div class="calendar-nav">
                 <span onclick="changeMonth(-1)">‹</span>
@@ -267,10 +288,9 @@
         entries.unshift(entry);
         localStorage.setItem('diabeteEntries', JSON.stringify(entries));
         
-        // Réinitialisation des champs
         document.getElementById('sugar-input').value = '';
         document.getElementById('insulin-input').value = '';
-        document.getElementById('insulin-type-input').value = 'Lente'; // Remet "Lente" par défaut
+        document.getElementById('insulin-type-input').value = 'Lente';
         
         setAutoPeriod();
         updateUI();
@@ -368,21 +388,37 @@
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         const todayStr = new Date().toDateString();
         
-        let html = '<div class="calendar-weekdays"><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span></div>';
-        html += '<div class="calendar-grid">';
+        // Génération dynamique des en-têtes pour griser l'en-tête du jour actuel
+        const weekdaysList = ["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"];
+        let html = '<div class="calendar-weekdays">';
+        weekdaysList.forEach((dayLabel, index) => {
+            let isTodayWeekday = false;
+            // Si on affiche le mois et l'année en cours, on surligne le nom du jour actuel
+            if (year === new Date().getFullYear() && month === new Date().getMonth()) {
+                const currentDayIndex = new Date().getDay();
+                const adjustedIndex = currentDayIndex === 0 ? 6 : currentDayIndex - 1;
+                if (index === adjustedIndex) isTodayWeekday = true;
+            }
+            html += `<div class="calendar-weekday ${isTodayWeekday ? 'today-header' : ''}">${dayLabel}</div>`;
+        });
+        html += '</div><div class="calendar-grid">';
         
-        for(let i=0; i<startOffset; i++) { html += `<div class="calendar-cell-wrap empty"></div>`; }
+        // Cases vides avant le 1er du mois
+        for(let i=0; i<startOffset; i++) { html += `<div class="calendar-cell empty"></div>`; }
         
+        // Les jours du mois
         for(let day=1; day<=daysInMonth; day++) {
             const cellDate = new Date(year, month, day);
             const isToday = cellDate.toDateString() === todayStr;
             const hasData = entries.some(e => new Date(e.date).toDateString() === cellDate.toDateString());
-            let todayClass = isToday ? 'today' : '';
-            let dotHtml = hasData ? '<div class="data-dot"></div>' : '<div class="no-data-spacer"></div>';
             
+            let todayClass = isToday ? 'today' : '';
+            let dotHtml = hasData ? '<div class="data-dot"></div>' : '';
+            
+            // La case est maintenant l'élément complet avec l'ombre (façon Bento)
             html += `
-                <div class="calendar-cell-wrap" onclick="openDayModal(${year}, ${month}, ${day})">
-                    <div class="calendar-cell ${todayClass}">${day}</div>
+                <div class="calendar-cell ${todayClass}" onclick="openDayModal(${year}, ${month}, ${day})">
+                    ${day}
                     ${dotHtml}
                 </div>
             `;
