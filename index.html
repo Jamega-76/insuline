@@ -8,11 +8,11 @@
     <style>
         :root {
             --bg-color: #000000;
-            --card-bg: #1C1C1E; /* Gris standard iOS mode sombre */
+            --card-bg: #1C1C1E; 
             --card-bg-light: #2C2C2E;
             --text-main: #FFFFFF;
             --text-muted: #8E8E93;
-            --accent-blue: #0A84FF; /* Bleu standard iOS */
+            --accent-blue: #0A84FF; 
             --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
@@ -67,10 +67,7 @@
         .input-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
         
         input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
+        input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type="number"] {
             -moz-appearance: textfield;
             background: transparent;
@@ -98,7 +95,6 @@
             text-align: center;
         }
 
-        /* Bouton d'action intégré à la carte */
         .btn-primary {
             background-color: var(--accent-blue);
             color: white;
@@ -112,13 +108,10 @@
             margin-top: 10px;
             transition: transform 0.1s ease, background-color 0.2s;
         }
-        .btn-primary:active { 
-            transform: scale(0.97); 
-            background-color: #0070E0; 
-        }
+        .btn-primary:active { transform: scale(0.97); background-color: #0070E0; }
 
         /* Barre de Tendance */
-        .section-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; display: flex; justify-content: space-between; }
+        .section-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
         .section-desc { color: var(--text-muted); font-size: 13px; margin-bottom: 18px; line-height: 1.4; }
         
         .trend-bar-bg {
@@ -131,28 +124,19 @@
             position: relative;
             margin-bottom: 8px;
         }
-        .trend-segment {
-            flex: 1;
-            border-right: 2px solid var(--bg-color);
-            height: 100%;
-            transition: background-color 0.3s;
-        }
+        .trend-segment { flex: 1; border-right: 2px solid var(--bg-color); height: 100%; transition: background-color 0.3s; }
         .trend-segment:last-child { border-right: none; }
-        
         .trend-labels { display: flex; justify-content: space-between; color: var(--text-muted); font-size: 12px; font-weight: 500; margin-bottom: 35px;}
 
-        /* Historique */
-        .history-header { display: flex; justify-content: space-between; color: var(--text-muted); font-size: 15px; font-weight: 500; margin-bottom: 15px; }
-        .history-list { flex-grow: 1; overflow-y: auto; padding-bottom: 20px;}
-        
+        /* Style des listes d'historique (réutilisé dans le modal) */
+        .history-list { display: flex; flex-direction: column; gap: 12px; }
         .history-item {
             background-color: var(--card-bg);
             border-radius: 16px;
-            padding: 18px;
+            padding: 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
         }
         .history-main { font-size: 17px; font-weight: 600; }
         .history-sub { color: var(--text-muted); font-size: 13px; margin-top: 6px; font-weight: 500; }
@@ -166,12 +150,71 @@
             align-items: center;
             gap: 6px;
         }
-        .insulin-type-label {
-            font-size: 11px;
-            color: var(--text-muted);
+        .insulin-type-label { font-size: 11px; color: var(--text-muted); font-weight: 500; text-transform: uppercase; }
+
+        /* Calendrier */
+        .calendar-nav { display: flex; align-items: center; gap: 15px; font-size: 16px; font-weight: normal; }
+        .calendar-nav span { cursor: pointer; color: var(--accent-blue); padding: 5px; }
+        #calendar-month-label { color: var(--text-main); font-weight: 600; font-size: 16px; min-width: 100px; text-align: center; }
+        
+        #calendar-container { margin-bottom: 30px; margin-top: 10px; }
+        .calendar-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 11px; color: var(--text-muted); margin-bottom: 10px; font-weight: 600; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+        
+        .calendar-cell { 
+            background-color: var(--card-bg); 
+            border-radius: 12px; 
+            aspect-ratio: 1; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            justify-content: center; 
+            font-size: 15px; 
             font-weight: 500;
-            text-transform: uppercase;
+            cursor: pointer;
+            box-sizing: border-box;
+            transition: opacity 0.2s;
         }
+        .calendar-cell:active { opacity: 0.6; }
+        .calendar-cell.empty { background-color: transparent; cursor: default; }
+        .calendar-cell.today { border: 1.5px solid var(--accent-blue); color: var(--accent-blue); font-weight: 700; }
+        
+        .data-dot { width: 5px; height: 5px; background-color: var(--accent-blue); border-radius: 50%; margin-top: 3px; }
+        .no-data-spacer { width: 5px; height: 5px; margin-top: 3px; }
+
+        /* Fenêtre Modale (Bulle du jour) */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5); 
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            display: none; align-items: center; justify-content: center; z-index: 1000;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.show { opacity: 1; display: flex; }
+        
+        .modal-content {
+            background-color: #151517; /* Légèrement plus foncé que les cartes pour détacher */
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px; 
+            width: 100%; max-width: 360px;
+            padding: 24px; 
+            max-height: 80vh; overflow-y: auto;
+            transform: translateY(20px);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .modal-overlay.show .modal-content { transform: translateY(0); }
+        
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-header h3 { margin: 0; font-size: 19px; font-weight: 600; }
+        .close-btn { 
+            background: var(--card-bg-light); color: var(--text-muted); 
+            width: 30px; height: 30px; border-radius: 15px; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 18px; font-weight: bold; cursor: pointer; 
+        }
+        .modal-empty { color: var(--text-muted); text-align: center; font-size: 15px; padding: 30px 0; }
 
     </style>
 </head>
@@ -191,7 +234,6 @@
 
     <div class="card">
         <span class="input-label">Nouveau relevé</span>
-        
         <div class="input-row">
             <input type="number" id="sugar-input" placeholder="105" step="0.1">
             <select class="dropdown" id="period-input">
@@ -200,7 +242,6 @@
                 <option value="Soir">Soir</option>
             </select>
         </div>
-        
         <div class="input-row" style="border-bottom: none; margin-bottom: 5px;">
             <input type="number" id="insulin-input" placeholder="4" step="1">
             <select class="dropdown" id="insulin-type-input">
@@ -208,15 +249,13 @@
                 <option value="Lente">Lente</option>
             </select>
         </div>
-
         <button class="btn-primary" onclick="saveEntry()">Enregistrer</button>
     </div>
 
     <div class="section-title">
         <span>Tendance sur 3 jours</span>
     </div>
-    <div class="section-desc">Activité de vos relevés. Le bleu indique la présence de données enregistrées.</div>
-    
+    <div class="section-desc">Activité récente de vos relevés.</div>
     <div class="trend-bar-bg">
         <div class="trend-segment" id="trend-day-3"></div>
         <div class="trend-segment" id="trend-day-2"></div>
@@ -228,31 +267,39 @@
         <span style="color: white;">Aujourd'hui</span>
     </div>
 
-    <div class="history-header">
-        <span>Historique récent</span>
-        <span>Insuline</span>
-    </div>
-    
-    <div class="history-list" id="history-list">
+    <div class="section-title" style="margin-top: 15px;">
+        <span>Historique</span>
+        <div class="calendar-nav">
+            <span onclick="changeMonth(-1)">‹</span>
+            <span id="calendar-month-label">Mois</span>
+            <span onclick="changeMonth(1)">›</span>
         </div>
+    </div>
+    <div id="calendar-container">
+        </div>
+</div>
 
+<div id="day-modal" class="modal-overlay" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <h3 id="modal-date-title">Date</h3>
+            <div class="close-btn" onclick="closeModal()">×</div>
+        </div>
+        <div id="modal-entries" class="history-list">
+            </div>
+    </div>
 </div>
 
 <script>
     let entries = JSON.parse(localStorage.getItem('diabeteEntries')) || [];
+    let calendarDate = new Date(); // Date utilisée pour l'affichage du calendrier
 
-    // Détermine la période de la journée en fonction de l'heure
     function setAutoPeriod() {
         const hour = new Date().getHours();
         const periodSelect = document.getElementById('period-input');
-        
-        if (hour >= 5 && hour < 12) {
-            periodSelect.value = "Matin";
-        } else if (hour >= 12 && hour < 18) {
-            periodSelect.value = "Midi";
-        } else {
-            periodSelect.value = "Soir";
-        }
+        if (hour >= 5 && hour < 12) periodSelect.value = "Matin";
+        else if (hour >= 12 && hour < 18) periodSelect.value = "Midi";
+        else periodSelect.value = "Soir";
     }
 
     function saveEntry() {
@@ -275,56 +322,29 @@
         entries.unshift(entry);
         localStorage.setItem('diabeteEntries', JSON.stringify(entries));
         
-        // Vider les champs pour le prochain relevé
         document.getElementById('sugar-input').value = '';
         document.getElementById('insulin-input').value = '';
         
-        // Remettre la période par défaut selon l'heure qu'il est
         setAutoPeriod();
-        
         updateUI();
     }
 
     function updateUI() {
-        const list = document.getElementById('history-list');
-        list.innerHTML = '';
-        
         let todayCount = 0;
         const todayStr = new Date().toDateString();
-
-        entries.slice(0, 10).forEach(entry => {
-            const entryDate = new Date(entry.date);
-            if (entryDate.toDateString() === todayStr) todayCount++;
-            
-            const timeStr = entryDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            const dateStr = entryDate.toLocaleDateString([], {day: '2-digit', month: 'short'});
-
-            let insulinDisplay = '-';
-            if (entry.insulin > 0) {
-                insulinDisplay = `${entry.insulin} U <span class="insulin-type-label">${entry.insulinType}</span>`;
-            }
-
-            list.innerHTML += `
-                <div class="history-item">
-                    <div>
-                        <div class="history-main">${entry.sugar} mg/dL</div>
-                        <div class="history-sub">${dateStr} • ${timeStr} (${entry.period})</div>
-                    </div>
-                    <div class="history-badge">
-                        ${insulinDisplay}
-                    </div>
-                </div>
-            `;
+        
+        entries.forEach(entry => {
+            if (new Date(entry.date).toDateString() === todayStr) todayCount++;
         });
-
         document.getElementById('today-count').innerText = `${todayCount} relevé${todayCount > 1 ? 's' : ''}`;
+
         updateTrendBar();
+        renderCalendar(); // Met à jour le calendrier pour afficher le nouveau point
     }
 
     function updateTrendBar() {
         const today = new Date();
         today.setHours(0,0,0,0);
-        
         const day1 = today.getTime();
         const day2 = day1 - 86400000;
         const day3 = day2 - 86400000;
@@ -343,11 +363,109 @@
         document.getElementById('trend-day-3').style.backgroundColor = hasDay3 ? 'rgba(10, 132, 255, 0.4)' : 'transparent';
     }
 
+    // --- LOGIQUE DU CALENDRIER ---
+    function renderCalendar() {
+        const year = calendarDate.getFullYear();
+        const month = calendarDate.getMonth();
+        
+        const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+        document.getElementById('calendar-month-label').innerText = `${monthNames[month]} ${year}`;
+        
+        // Calcul du premier jour (pour gérer les cases vides avant le 1er du mois)
+        // new Date().getDay() donne 0 pour Dimanche. On veut Lundi = 0.
+        let firstDayIndex = new Date(year, month, 1).getDay();
+        let startOffset = firstDayIndex === 0 ? 6 : firstDayIndex - 1;
+        
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const todayStr = new Date().toDateString();
+        
+        let html = '<div class="calendar-weekdays"><span>LUN</span><span>MAR</span><span>MER</span><span>JEU</span><span>VEN</span><span>SAM</span><span>DIM</span></div>';
+        html += '<div class="calendar-grid">';
+        
+        // Cases vides
+        for(let i=0; i<startOffset; i++) {
+            html += `<div class="calendar-cell empty"></div>`;
+        }
+        
+        // Jours du mois
+        for(let day=1; day<=daysInMonth; day++) {
+            const cellDate = new Date(year, month, day);
+            const isToday = cellDate.toDateString() === todayStr;
+            
+            // Vérifier si des entrées existent pour ce jour
+            const hasData = entries.some(e => new Date(e.date).toDateString() === cellDate.toDateString());
+            
+            html += `
+                <div class="calendar-cell ${isToday ? 'today' : ''}" onclick="openDayModal(${year}, ${month}, ${day})">
+                    <span>${day}</span>
+                    ${hasData ? '<div class="data-dot"></div>' : '<div class="no-data-spacer"></div>'}
+                </div>
+            `;
+        }
+        html += '</div>';
+        document.getElementById('calendar-container').innerHTML = html;
+    }
+
+    function changeMonth(delta) {
+        calendarDate.setMonth(calendarDate.getMonth() + delta);
+        renderCalendar();
+    }
+
+    // --- LOGIQUE DE LA BULLE (MODAL) ---
+    function openDayModal(year, month, day) {
+        const selectedDate = new Date(year, month, day);
+        const dateStr = selectedDate.toDateString();
+        
+        // Format de date joli (ex: "Lundi 12 Octobre")
+        const options = { weekday: 'long', day: 'numeric', month: 'long' };
+        let titleStr = selectedDate.toLocaleDateString('fr-FR', options);
+        // Majuscule à la première lettre
+        document.getElementById('modal-date-title').innerText = titleStr.charAt(0).toUpperCase() + titleStr.slice(1);
+        
+        const dayEntries = entries.filter(e => new Date(e.date).toDateString() === dateStr);
+        const container = document.getElementById('modal-entries');
+        container.innerHTML = '';
+        
+        if (dayEntries.length === 0) {
+            container.innerHTML = '<div class="modal-empty">Aucun relevé enregistré ce jour.</div>';
+        } else {
+            // Afficher les relevés du jour en recyclant le design de la liste d'historique
+            dayEntries.forEach(entry => {
+                const timeStr = new Date(entry.date).toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'});
+                let insulinDisplay = '-';
+                if (entry.insulin > 0) {
+                    insulinDisplay = `${entry.insulin} U <span class="insulin-type-label">${entry.insulinType}</span>`;
+                }
+                
+                container.innerHTML += `
+                    <div class="history-item" style="background-color: var(--card-bg-light); border: 1px solid rgba(255,255,255,0.05);">
+                        <div>
+                            <div class="history-main">${entry.sugar} mg/dL</div>
+                            <div class="history-sub">${timeStr} (${entry.period})</div>
+                        </div>
+                        <div class="history-badge">
+                            ${insulinDisplay}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        
+        // Afficher avec une petite animation
+        const modal = document.getElementById('day-modal');
+        modal.classList.add('show');
+    }
+
+    function closeModal(event) {
+        // Ferme si on clique sur la croix OU dans la zone d'ombre (en dehors de la carte centrale)
+        if (event && event.target !== document.getElementById('day-modal')) return;
+        document.getElementById('day-modal').classList.remove('show');
+    }
+
+    // Initialisation
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js').catch(err => console.log(err));
     }
-
-    // Initialisation au chargement de la page
     setAutoPeriod(); 
     updateUI();
 </script>
