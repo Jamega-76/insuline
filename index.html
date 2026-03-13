@@ -31,7 +31,7 @@
             width: 100%;
             max-width: 430px; 
             padding: 20px;
-            padding-bottom: env(safe-area-inset-bottom, 40px); /* Gère la barre du bas sur iPhone */
+            padding-bottom: env(safe-area-inset-bottom, 40px);
             box-sizing: border-box;
             min-height: 100vh;
             display: flex;
@@ -66,7 +66,6 @@
         
         .input-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
         
-        /* Suppression des flèches par défaut sur les inputs number */
         input[type="number"]::-webkit-inner-spin-button,
         input[type="number"]::-webkit-outer-spin-button {
             -webkit-appearance: none;
@@ -180,7 +179,8 @@
 
 <div class="app-container">
     <div class="header">
-        <span class="icon"></span> <h1>Suivi Diabète</h1>
+        <span class="icon"></span> 
+        <h1>Suivi Diabète</h1>
         <span class="icon">ⓘ</span>
     </div>
 
@@ -241,6 +241,20 @@
 <script>
     let entries = JSON.parse(localStorage.getItem('diabeteEntries')) || [];
 
+    // Détermine la période de la journée en fonction de l'heure
+    function setAutoPeriod() {
+        const hour = new Date().getHours();
+        const periodSelect = document.getElementById('period-input');
+        
+        if (hour >= 5 && hour < 12) {
+            periodSelect.value = "Matin";
+        } else if (hour >= 12 && hour < 18) {
+            periodSelect.value = "Midi";
+        } else {
+            periodSelect.value = "Soir";
+        }
+    }
+
     function saveEntry() {
         const sugar = document.getElementById('sugar-input').value;
         const insulin = document.getElementById('insulin-input').value;
@@ -261,8 +275,12 @@
         entries.unshift(entry);
         localStorage.setItem('diabeteEntries', JSON.stringify(entries));
         
+        // Vider les champs pour le prochain relevé
         document.getElementById('sugar-input').value = '';
         document.getElementById('insulin-input').value = '';
+        
+        // Remettre la période par défaut selon l'heure qu'il est
+        setAutoPeriod();
         
         updateUI();
     }
@@ -320,7 +338,6 @@
             else if (d >= day3 && d < day2) hasDay3 = true;
         });
 
-        // Utilisation du bleu iOS avec différentes opacités pour la profondeur
         document.getElementById('trend-day-1').style.backgroundColor = hasDay1 ? 'var(--accent-blue)' : 'transparent';
         document.getElementById('trend-day-2').style.backgroundColor = hasDay2 ? 'rgba(10, 132, 255, 0.7)' : 'transparent';
         document.getElementById('trend-day-3').style.backgroundColor = hasDay3 ? 'rgba(10, 132, 255, 0.4)' : 'transparent';
@@ -330,6 +347,8 @@
         navigator.serviceWorker.register('sw.js').catch(err => console.log(err));
     }
 
+    // Initialisation au chargement de la page
+    setAutoPeriod(); 
     updateUI();
 </script>
 </body>
