@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Suivi Santé</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        :root {
+            --bg-color: #000000;
+            --card-bg: #151517;
+            --card-bg-light: #1C1C1E;
+            --text-main: #FFFFFF;
+            --text-muted: #8E8E93;
+            --accent-blue: #3282F6;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-family);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 430px; 
+            padding: 20px;
+            box-sizing: border-box;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* En-tête */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            margin-top: 10px;
+        }
+        .header h1 { font-size: 18px; font-weight: 600; margin: 0; }
+        .icon { font-size: 20px; cursor: pointer; color: var(--text-muted); }
+
+        /* Balance / Statut */
+        .status-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .status-title { color: var(--text-muted); font-size: 14px; }
+        .status-value { font-size: 14px; color: var(--text-main); }
+
+        /* Carte de saisie principale */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        .input-label { color: var(--text-muted); font-size: 14px; margin-bottom: 10px; display: block; }
+        
+        .input-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #2C2C2E; padding-bottom: 15px; }
+        .input-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        
+        input[type="number"] {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 32px;
+            font-weight: 600;
+            width: 50%;
+            outline: none;
+        }
+        input[type="number"]::placeholder { color: #3A3A3C; }
+        
+        .dropdown {
+            background-color: #2C2C2E;
+            color: var(--text-main);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        /* Barre de Tendance */
+        .section-title { font-size: 16px; margin-bottom: 5px; display: flex; justify-content: space-between; }
+        .section-desc { color: var(--text-muted); font-size: 12px; margin-bottom: 15px; line-height: 1.4; }
+        
+        .trend-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .trend-bar-bg {
+            flex-grow: 1;
+            height: 12px;
+            background-color: #2C2C2E;
+            border-radius: 6px;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+        }
+        .trend-segment {
+            flex: 1;
+            border-right: 2px solid var(--bg-color);
+            height: 100%;
+            transition: background-color 0.3s;
+        }
+        .trend-segment:last-child { border-right: none; }
+        
+        .trend-labels { display: flex; justify-content: space-between; color: var(--text-muted); font-size: 11px; margin-bottom: 30px;}
+
+        /* Historique (Positions) */
+        .history-header { display: flex; justify-content: space-between; color: var(--text-muted); font-size: 14px; margin-bottom: 15px; }
+        .history-list { flex-grow: 1; overflow-y: auto; margin-bottom: 20px; }
+        
+        .history-item {
+            background-color: var(--card-bg-light);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .history-main { font-size: 15px; font-weight: 500; }
+        .history-sub { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
+        .history-badge {
+            background-color: #1A1A1C;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .insulin-type-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-left: 4px;
+        }
+
+        /* Bouton d'action */
+        .btn-primary {
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 18px;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            margin-top: auto;
+        }
+        .btn-primary:active { opacity: 0.8; }
+
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header">
+        <span class="icon">←</span>
+        <h1>Suivi Diabète</h1>
+        <span class="icon">ⓘ</span>
+    </div>
+
+    <div class="status-header">
+        <span class="status-title">Aujourd'hui</span>
+        <span class="status-value" id="today-count">0 relevés</span>
+    </div>
+
+    <div class="card">
+        <span class="input-label">Nouveau relevé</span>
+        
+        <div class="input-row">
+            <input type="number" id="sugar-input" placeholder="105" step="0.1">
+            <select class="dropdown" id="period-input">
+                <option value="Matin">Matin</option>
+                <option value="Midi">Midi</option>
+                <option value="Soir">Soir</option>
+            </select>
+        </div>
+        
+        <div class="input-row">
+            <input type="number" id="insulin-input" placeholder="4" step="1">
+            <select class="dropdown" id="insulin-type-input">
+                <option value="Rapide">Rapide</option>
+                <option value="Lente">Lente</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="section-title">
+        <span>Tendance sur 3 jours</span>
+        <span class="icon">ⓘ</span>
+    </div>
+    <div class="section-desc">Évolution de votre glycémie. Le bleu indique une journée avec des relevés enregistrés.</div>
+    
+    <div class="trend-bar-bg">
+        <div class="trend-segment" id="trend-day-3"></div>
+        <div class="trend-segment" id="trend-day-2"></div>
+        <div class="trend-segment" id="trend-day-1"></div>
+    </div>
+    <div class="trend-labels">
+        <span>J-2</span>
+        <span>J-1</span>
+        <span style="color: white;">Aujourd'hui</span>
+    </div>
+
+    <div class="history-header">
+        <span>Historique récent</span>
+        <span>Insuline</span>
+    </div>
+    
+    <div class="history-list" id="history-list">
+        </div>
+
+    <button class="btn-primary" onclick="saveEntry()">Ajouter le relevé</button>
+</div>
+
+<script>
+    let entries = JSON.parse(localStorage.getItem('diabeteEntries')) || [];
+
+    function saveEntry() {
+        const sugar = document.getElementById('sugar-input').value;
+        const insulin = document.getElementById('insulin-input').value;
+        const period = document.getElementById('period-input').value;
+        const insulinType = document.getElementById('insulin-type-input').value;
+
+        if (!sugar) return alert("Veuillez saisir au moins le taux de sucre.");
+
+        const entry = {
+            id: Date.now(),
+            date: new Date().toISOString(),
+            sugar: parseFloat(sugar),
+            insulin: insulin ? parseFloat(insulin) : 0,
+            insulinType: insulin ? insulinType : null,
+            period: period
+        };
+
+        entries.unshift(entry);
+        localStorage.setItem('diabeteEntries', JSON.stringify(entries));
+        
+        // Réinitialiser les champs
+        document.getElementById('sugar-input').value = '';
+        document.getElementById('insulin-input').value = '';
+        // On laisse les menus déroulants sur leur dernière valeur pour lui faire gagner du temps
+        
+        updateUI();
+    }
+
+    function updateUI() {
+        const list = document.getElementById('history-list');
+        list.innerHTML = '';
+        
+        let todayCount = 0;
+        const todayStr = new Date().toDateString();
+
+        entries.slice(0, 10).forEach(entry => {
+            const entryDate = new Date(entry.date);
+            if (entryDate.toDateString() === todayStr) todayCount++;
+            
+            const timeStr = entryDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            const dateStr = entryDate.toLocaleDateString([], {day: '2-digit', month: 'short'});
+
+            // Formatage de l'affichage de l'insuline
+            let insulinDisplay = '-';
+            if (entry.insulin > 0) {
+                insulinDisplay = `${entry.insulin} U <span class="insulin-type-label">${entry.insulinType}</span>`;
+            }
+
+            list.innerHTML += `
+                <div class="history-item">
+                    <div>
+                        <div class="history-main">${entry.sugar} mg/dL</div>
+                        <div class="history-sub">${dateStr} • ${timeStr} (${entry.period})</div>
+                    </div>
+                    <div class="history-badge">
+                        ${insulinDisplay} <span>⌄</span>
+                    </div>
+                </div>
+            `;
+        });
+
+        document.getElementById('today-count').innerText = `${todayCount} relevé${todayCount > 1 ? 's' : ''}`;
+        updateTrendBar();
+    }
+
+    function updateTrendBar() {
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        
+        const day1 = today.getTime();
+        const day2 = day1 - 86400000;
+        const day3 = day2 - 86400000;
+
+        let hasDay1 = false, hasDay2 = false, hasDay3 = false;
+
+        entries.forEach(entry => {
+            const d = new Date(entry.date).getTime();
+            if (d >= day1) hasDay1 = true;
+            else if (d >= day2 && d < day1) hasDay2 = true;
+            else if (d >= day3 && d < day2) hasDay3 = true;
+        });
+
+        document.getElementById('trend-day-1').style.backgroundColor = hasDay1 ? 'var(--accent-blue)' : 'transparent';
+        document.getElementById('trend-day-2').style.backgroundColor = hasDay2 ? '#1E5EAE' : 'transparent';
+        document.getElementById('trend-day-3').style.backgroundColor = hasDay3 ? '#164580' : 'transparent';
+    }
+
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').catch(err => console.log(err));
+    }
+
+    updateUI();
+</script>
+</body>
+</html>
