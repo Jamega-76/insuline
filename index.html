@@ -114,7 +114,7 @@
         .calendar-cell.today { background-color: var(--card-bg-light); font-weight: 700; }
         .data-dot { position: absolute; top: 6px; right: 6px; width: 6px; height: 6px; background-color: var(--accent-blue); border-radius: 50%; }
 
-        /* Articles Santé (NOUVEAU) */
+        /* Articles Santé */
         .article-card { background-color: var(--card-bg); border-radius: 16px; padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 16px; box-shadow: var(--shadow-subtle); border: 1px solid var(--border-color); transition: background-color 0.3s, border-color 0.3s; }
         .article-icon { font-size: 24px; background-color: var(--card-bg-light); width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background-color 0.3s; }
         .article-content { display: flex; flex-direction: column; }
@@ -158,7 +158,7 @@
 
     <div class="welcome-banner">
         <div class="welcome-text">
-            <span class="welcome-greeting">Bonjour</span>
+            <span class="welcome-greeting" id="greeting-text">Bonjour</span>
             <span class="welcome-name">Lahsen</span>
             <span class="welcome-date" id="current-date">--</span>
         </div>
@@ -167,7 +167,7 @@
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
             </div>
             <div class="action-pill avatar">
-                <img src="photo.jpg" alt="Profil" style="width: 100%; height: 100%; object-fit: cover;">
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="var(--text-muted)" stroke="none" style="margin-top: 8px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
             </div>
         </div>
     </div>
@@ -245,6 +245,22 @@
             <div class="article-content">
                 <div class="article-title">La force de la routine</div>
                 <div class="article-text">Prendre vos repas et votre insuline à des heures régulières aide votre corps à mieux se stabiliser.</div>
+            </div>
+        </div>
+
+        <div class="article-card">
+            <div class="article-icon">🥦</div>
+            <div class="article-content">
+                <div class="article-title">L'atout des fibres</div>
+                <div class="article-text">Commencer son repas par des légumes riches en fibres ralentit l'absorption du sucre dans le sang.</div>
+            </div>
+        </div>
+
+        <div class="article-card">
+            <div class="article-icon">🛏️</div>
+            <div class="article-content">
+                <div class="article-title">Le pouvoir du sommeil</div>
+                <div class="article-text">Une bonne nuit de repos (7 à 8h) réduit la résistance à l'insuline et aide à mieux réguler le taux de sucre.</div>
             </div>
         </div>
     </div>
@@ -326,10 +342,19 @@
 </script>
 
 <script>
-    window.displayCurrentDate = function() {
+    // Gère la date ET le Bonjour/Bonsoir
+    window.displayGreetingAndDate = function() {
         const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
         let dateStr = new Date().toLocaleDateString('fr-FR', options);
         document.getElementById('current-date').innerText = dateStr;
+
+        const hour = new Date().getHours();
+        // S'il est 18h ou plus, ou avant 5h du matin, on dit Bonsoir.
+        if (hour >= 18 || hour < 5) {
+            document.getElementById('greeting-text').innerText = "Bonsoir";
+        } else {
+            document.getElementById('greeting-text').innerText = "Bonjour";
+        }
     }
 
     window.initTheme = function() {
@@ -496,7 +521,7 @@
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(err => console.log(err));
     
     window.initTheme(); 
-    window.displayCurrentDate(); 
+    window.displayGreetingAndDate(); // Appel de la nouvelle fonction !
     window.setAutoPeriod();
 </script>
 </body>
