@@ -62,7 +62,7 @@
         .header h1 { font-size: 20px; font-weight: 700; margin: 0; letter-spacing: 0.5px; }
         .icon { font-size: 22px; cursor: pointer; color: var(--text-muted); font-weight: 300; transition: color 0.3s; }
 
-        /* Bannière de Bienvenue (NOUVEAU) */
+        /* Bannière de Bienvenue */
         .welcome-banner { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
         .welcome-text { display: flex; flex-direction: column; }
         .welcome-greeting { font-size: 26px; color: var(--text-muted); font-weight: 500; line-height: 1; margin-bottom: 2px; letter-spacing: -0.5px;}
@@ -72,8 +72,8 @@
         .welcome-actions { display: flex; gap: 10px; align-items: center; }
         .action-pill { width: 44px; height: 44px; border-radius: 22px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; background-color: transparent; transition: border-color 0.3s; }
         .action-pill svg { color: var(--text-main); transition: color 0.3s; }
-        .action-pill.disabled { opacity: 0.3; } /* Cloche grisée */
-        .action-pill.avatar { background-color: var(--card-bg-light); border: none; overflow: hidden; }
+        .action-pill.disabled { opacity: 0.3; }
+        .action-pill.avatar { background-color: var(--card-bg-light); border: none; overflow: hidden; padding: 0; }
 
         /* Balance / Statut */
         .status-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
@@ -113,6 +113,13 @@
         .calendar-cell.empty:active { transform: none; }
         .calendar-cell.today { background-color: var(--card-bg-light); font-weight: 700; }
         .data-dot { position: absolute; top: 6px; right: 6px; width: 6px; height: 6px; background-color: var(--accent-blue); border-radius: 50%; }
+
+        /* Articles Santé (NOUVEAU) */
+        .article-card { background-color: var(--card-bg); border-radius: 16px; padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 16px; box-shadow: var(--shadow-subtle); border: 1px solid var(--border-color); transition: background-color 0.3s, border-color 0.3s; }
+        .article-icon { font-size: 24px; background-color: var(--card-bg-light); width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background-color 0.3s; }
+        .article-content { display: flex; flex-direction: column; }
+        .article-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; color: var(--text-main); transition: color 0.3s; }
+        .article-text { font-size: 13px; color: var(--text-muted); line-height: 1.4; }
 
         /* Modale */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; opacity: 0; transition: opacity 0.3s ease; }
@@ -160,7 +167,7 @@
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
             </div>
             <div class="action-pill avatar">
-                <svg width="34" height="34" viewBox="0 0 24 24" fill="var(--text-muted)" stroke="none" style="margin-top: 8px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                <img src="photo.jpg" alt="Profil" style="width: 100%; height: 100%; object-fit: cover;">
             </div>
         </div>
     </div>
@@ -200,7 +207,7 @@
         </div>
     </div>
 
-    <div style="margin-bottom: 25px;">
+    <div style="margin-bottom: 35px;">
         <div class="section-title" style="margin-bottom: 15px;">
             <span>Historique</span>
             <div class="calendar-nav">
@@ -211,6 +218,37 @@
         </div>
         <div id="calendar-container"></div>
     </div>
+
+    <div style="margin-bottom: 40px;">
+        <div class="section-title" style="margin-bottom: 15px;">
+            <span>Conseils & Bien-être</span>
+        </div>
+        
+        <div class="article-card">
+            <div class="article-icon">🚶‍♂️</div>
+            <div class="article-content">
+                <div class="article-title">La marche après le repas</div>
+                <div class="article-text">Une marche de 10 à 15 minutes après avoir mangé aide le corps à réduire significativement le pic de glycémie.</div>
+            </div>
+        </div>
+
+        <div class="article-card">
+            <div class="article-icon">💧</div>
+            <div class="article-content">
+                <div class="article-title">L'importance de l'eau</div>
+                <div class="article-text">Boire régulièrement de l'eau tout au long de la journée aide vos reins à éliminer l'excès de sucre par l'urine.</div>
+            </div>
+        </div>
+
+        <div class="article-card">
+            <div class="article-icon">⏱️</div>
+            <div class="article-content">
+                <div class="article-title">La force de la routine</div>
+                <div class="article-text">Prendre vos repas et votre insuline à des heures régulières aide votre corps à mieux se stabiliser.</div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <div id="day-modal" class="modal-overlay" onclick="closeModal(event)">
@@ -288,7 +326,6 @@
 </script>
 
 <script>
-    // Affiche la date du jour en Français dynamiquement
     window.displayCurrentDate = function() {
         const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
         let dateStr = new Date().toLocaleDateString('fr-FR', options);
@@ -458,9 +495,8 @@
 
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(err => console.log(err));
     
-    // Initialisation
     window.initTheme(); 
-    window.displayCurrentDate(); // Affiche la date du jour au lancement
+    window.displayCurrentDate(); 
     window.setAutoPeriod();
 </script>
 </body>
