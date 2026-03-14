@@ -57,15 +57,30 @@
         .toast.show { transform: translateX(-50%) translateY(0); }
         body.dark-theme .toast { background: rgba(255, 255, 255, 0.9); color: #000; }
 
-        /* Interface Globale */
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; margin-top: env(safe-area-inset-top, 10px); }
-        .header h1 { font-size: 22px; font-weight: 700; margin: 0; letter-spacing: 0.5px; }
+        /* En-tête */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; margin-top: env(safe-area-inset-top, 10px); }
+        .header h1 { font-size: 20px; font-weight: 700; margin: 0; letter-spacing: 0.5px; }
         .icon { font-size: 22px; cursor: pointer; color: var(--text-muted); font-weight: 300; transition: color 0.3s; }
 
+        /* Bannière de Bienvenue (NOUVEAU) */
+        .welcome-banner { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .welcome-text { display: flex; flex-direction: column; }
+        .welcome-greeting { font-size: 26px; color: var(--text-muted); font-weight: 500; line-height: 1; margin-bottom: 2px; letter-spacing: -0.5px;}
+        .welcome-name { font-size: 34px; font-weight: 700; color: var(--text-main); line-height: 1.1; letter-spacing: -1px; margin-bottom: 6px; transition: color 0.3s;}
+        .welcome-date { font-size: 13px; color: var(--text-muted); font-weight: 500; text-transform: capitalize; }
+        
+        .welcome-actions { display: flex; gap: 10px; align-items: center; }
+        .action-pill { width: 44px; height: 44px; border-radius: 22px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; background-color: transparent; transition: border-color 0.3s; }
+        .action-pill svg { color: var(--text-main); transition: color 0.3s; }
+        .action-pill.disabled { opacity: 0.3; } /* Cloche grisée */
+        .action-pill.avatar { background-color: var(--card-bg-light); border: none; overflow: hidden; }
+
+        /* Balance / Statut */
         .status-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
         .status-title { color: var(--text-muted); font-size: 15px; font-weight: 500; }
         .status-value { font-size: 15px; font-weight: 600; color: var(--text-main); transition: color 0.3s; }
 
+        /* Cartes */
         .card { background-color: var(--card-bg); border-radius: 20px; padding: 22px; margin-bottom: 25px; box-shadow: 0 4px 20px var(--shadow-color); transition: background-color 0.3s ease, box-shadow 0.3s ease; }
         .input-label { color: var(--text-muted); font-size: 13px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 15px; display: block; }
         .input-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; transition: border-color 0.3s; }
@@ -130,8 +145,24 @@
 <div class="app-container">
     <div class="header">
         <span class="icon"></span> 
-        <h1>Suivi Diabète</h1>
+        <h1 style="color: var(--text-muted); font-weight: 600;">Suivi Diabète</h1>
         <span class="icon" id="theme-btn" onclick="toggleTheme()" style="font-size: 24px;">☾</span>
+    </div>
+
+    <div class="welcome-banner">
+        <div class="welcome-text">
+            <span class="welcome-greeting">Bonjour</span>
+            <span class="welcome-name">Lahsen</span>
+            <span class="welcome-date" id="current-date">--</span>
+        </div>
+        <div class="welcome-actions">
+            <div class="action-pill disabled">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            </div>
+            <div class="action-pill avatar">
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="var(--text-muted)" stroke="none" style="margin-top: 8px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            </div>
+        </div>
     </div>
 
     <div class="status-header">
@@ -257,6 +288,13 @@
 </script>
 
 <script>
+    // Affiche la date du jour en Français dynamiquement
+    window.displayCurrentDate = function() {
+        const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+        let dateStr = new Date().toLocaleDateString('fr-FR', options);
+        document.getElementById('current-date').innerText = dateStr;
+    }
+
     window.initTheme = function() {
         const savedTheme = localStorage.getItem('diabeteTheme');
         if (savedTheme === 'dark') {
@@ -419,7 +457,11 @@
     }
 
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(err => console.log(err));
-    window.initTheme(); window.setAutoPeriod();
+    
+    // Initialisation
+    window.initTheme(); 
+    window.displayCurrentDate(); // Affiche la date du jour au lancement
+    window.setAutoPeriod();
 </script>
 </body>
 </html>
